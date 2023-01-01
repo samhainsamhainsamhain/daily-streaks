@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import moment from "moment";
+import HabitForm from "./components/Habit/HabitForm";
+import HabitsList from "./components/Habit/HabitsList";
+import { day, habit } from "./objects/objects";
 import "./App.css";
-import HabitForm from "./components/HabitForm";
-import HabitsList from "./components/HabitsList";
-import { habit } from "./objects/objects";
 
 function App() {
   const [appState, setAppState] = useState<habit[]>([]);
+  const [timelineLength, setTimelineLength] = useState(365);
 
   useEffect(() => {
     setAppState(JSON.parse(localStorage.getItem("habits") || "[]"));
@@ -21,7 +23,14 @@ function App() {
 
     newState.push({
       name: habit,
-      days: [],
+      days: [
+        ...Array.from(new Array(365)).map((_, index) => {
+          return {
+            date: moment(startDate).add(index, "day").format("DDMMYY"),
+            value: undefined,
+          };
+        }),
+      ],
     });
 
     setAppState(newState);
@@ -36,10 +45,21 @@ function App() {
     return false;
   }
 
+  function saveAppState() {
+    localStorage.setItem("habits", JSON.stringify(appState));
+  }
+
+  const startDate = moment().add(-timelineLength, "days").toDate();
+  const dateRange = [startDate, moment().add(1, "days").toDate()];
+
   return (
-    <div className="App">
+    <div className="App w-[100%]">
       <HabitForm createNewHabitHandler={createNewHabitHandler} />
-      <HabitsList appState={appState} />
+      <HabitsList
+        appState={appState}
+        dateRange={dateRange}
+        saveAppState={saveAppState}
+      />
     </div>
   );
 }
