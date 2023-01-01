@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import HabitForm from './components/habitForm';
+import HabitsList from './components/habitsList';
 import { habit } from './objects/objects';
 
 function App() {
@@ -11,7 +12,6 @@ function App() {
   }, []);
 
   function createNewHabitHandler(habit: string) {
-    debugger;
     const newState = appState;
 
     newState.push({
@@ -27,6 +27,7 @@ function App() {
   return (
     <div className="App">
       <HabitForm createNewHabitHandler={createNewHabitHandler} />
+      <HabitsList appState={appState} />
     </div>
   );
 }
