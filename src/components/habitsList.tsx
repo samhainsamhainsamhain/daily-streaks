@@ -9,7 +9,7 @@ const HabitsList = ({ appState }: HabitsListProps) => {
     <ul>
       {appState.map((habit) => {
         return (
-          <li>
+          <li key={habit.name}>
             <h3>{habit.name}</h3>
           </li>
         );
