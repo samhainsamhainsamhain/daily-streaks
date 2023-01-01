@@ -12,7 +12,12 @@ function App() {
   }, []);
 
   function createNewHabitHandler(habit: string) {
-    const newState = appState;
+    const newState = [...appState];
+
+    if (habitExists(habit)) {
+      console.log('habit already exists'); //TODO: throw error to user
+      return;
+    }
 
     newState.push({
       name: habit,
@@ -20,8 +25,15 @@ function App() {
     });
 
     setAppState(newState);
+    localStorage.setItem('habits', JSON.stringify(newState));
+  }
 
-    localStorage.setItem('habits', JSON.stringify(appState));
+  function habitExists(habit: string) {
+    if (appState.find((e) => e.name === habit)) {
+      return true;
+    }
+
+    return false;
   }
 
   return (
