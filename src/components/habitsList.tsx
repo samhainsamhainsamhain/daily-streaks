@@ -1,4 +1,4 @@
-import { habit } from '../objects/objects';
+import { habit } from "../objects/objects";
 
 type HabitsListProps = {
   appState: habit[];

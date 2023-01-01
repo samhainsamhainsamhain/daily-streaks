@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import './App.css';
-import HabitForm from './components/habitForm';
-import HabitsList from './components/habitsList';
-import { habit } from './objects/objects';
+import { useState, useEffect } from "react";
+import "./App.css";
+import HabitForm from "./components/HabitForm";
+import HabitsList from "./components/HabitsList";
+import { habit } from "./objects/objects";
 
 function App() {
   const [appState, setAppState] = useState<habit[]>([]);
 
   useEffect(() => {
-    setAppState(JSON.parse(localStorage.getItem('habits') || '[]'));
+    setAppState(JSON.parse(localStorage.getItem("habits") || "[]"));
   }, []);
 
   function createNewHabitHandler(habit: string) {
     const newState = [...appState];
 
     if (habitExists(habit)) {
-      console.log('habit already exists'); //TODO: throw error to user
+      console.log("habit already exists"); //TODO: throw error to user
       return;
     }
 
@@ -25,7 +25,7 @@ function App() {
     });
 
     setAppState(newState);
-    localStorage.setItem('habits', JSON.stringify(newState));
+    localStorage.setItem("habits", JSON.stringify(newState));
   }
 
   function habitExists(habit: string) {
