@@ -1,0 +1,23 @@
+.grid-rows-7 {
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+}
+
+.Jan ~ .Jan,
+.Feb ~ .Feb,
+.Mar ~ .Mar,
+.Apr ~ .Apr,
+.May ~ .May,
+.Jun ~ .Jun,
+.Jul ~ .Jul,
+.Aug ~ .Aug,
+.Sep ~ .Sep,
+.Oct ~ .Oct,
+.Nov ~ .Nov,
+.Dec ~ .Dec {
+  visibility: hidden;
+}
+
+.text-xxs {
+  font-size: 0.55rem;
+  line-height: 1rem;
+}
