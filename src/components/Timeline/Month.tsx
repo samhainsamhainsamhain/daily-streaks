@@ -11,11 +11,11 @@ const Month = ({ index, startDate, months }: MonthProps) => {
   let monthName = date.format("MMM");
   return (
     <>
-      <li
+      <span
         className={`${monthName} text-xxs flex h-3 w-4 self-center align-middle`}
       >
         {monthName}
-      </li>
+      </span>
     </>
   );
 };

@@ -4,9 +4,9 @@ const Weekdays = () => {
   return (
     <div className="grid-rows-7 grid h-[calc(7*15px)] grid-flow-col flex-wrap content-center items-start justify-center px-2">
       {weekdays.map((weekday) => (
-        <li className="text-xxs mb-1 flex h-2 w-2" key={weekday}>
+        <div className="text-xxs mb-1 flex h-2 w-2" key={weekday}>
           {weekday}
-        </li>
+        </div>
       ))}
     </div>
   );
