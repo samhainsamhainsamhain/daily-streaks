@@ -3,10 +3,9 @@ import moment from "moment";
 type MonthProps = {
   index: number;
   startDate: any;
-  months: number[];
 };
 
-const Month = ({ index, startDate, months }: MonthProps) => {
+const Month = ({ index, startDate }: MonthProps) => {
   let date = moment(startDate).add(index * 7, "day");
   let monthName = date.format("MMM");
   return (
