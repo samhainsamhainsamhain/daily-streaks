@@ -1,6 +1,7 @@
 {
   "name": "daily-streaks",
   "private": true,
+  "homepage": "https://samhainsamhainsamhain.github.io/daily-streaks",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
