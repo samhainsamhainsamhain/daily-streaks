@@ -1,4 +1,9 @@
 export type habit = {
   name: string;
-  days: number[];
+  days: day[];
+};
+
+export type day = {
+  date: string;
+  value: number | undefined;
 };
