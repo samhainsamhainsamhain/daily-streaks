@@ -14,8 +14,6 @@ const Timeline = ({ dateRange, habit }: TimelineProps) => {
     moment().diff(dateRange[0], "days") - moment().diff(dateRange[1], "days")
   );
 
-  console.log(moment().diff(dateRange[1], "days") + 1);
-
   const months: number[] = Array.from(new Array(Math.floor(days / 7)));
 
   const startDate = dateRange[0];
