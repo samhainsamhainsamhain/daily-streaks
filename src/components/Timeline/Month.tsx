@@ -1,4 +1,4 @@
-import moment from "moment";
+import { getMonthName } from "../../utils/dates";
 
 type MonthProps = {
   index: number;
@@ -6,8 +6,7 @@ type MonthProps = {
 };
 
 const Month = ({ index, startDate }: MonthProps) => {
-  let date = moment(startDate).add(index * 7, "day");
-  let monthName = date.format("MMM");
+  let monthName = getMonthName(index, startDate);
   return (
     <>
       <span

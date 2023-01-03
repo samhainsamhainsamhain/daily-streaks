@@ -1,23 +1,35 @@
-import moment from "moment";
-import { habit } from "../../objects/objects";
+import { useState, useEffect } from "react";
+
 import Days from "./Days";
 import Month from "./Month";
 import Weekdays from "./Weekdays";
 
+import { habit } from "../../objects/objects";
+
 type TimelineProps = {
   dateRange: Date[];
+  timelineLength: number;
+  habits: habit[];
   habit: habit;
+  days: string[];
 };
 
-const Timeline = ({ dateRange, habit }: TimelineProps) => {
-  const days = Math.abs(
-    moment().diff(dateRange[0], "days") - moment().diff(dateRange[1], "days")
+const Timeline = ({
+  dateRange,
+  habits,
+  habit,
+  timelineLength,
+  days,
+}: TimelineProps) => {
+  const [daysColored, setDaysColored] = useState(
+    calculateColoredDays(days, habit)
   );
 
-  const months: number[] = Array.from(new Array(Math.floor(days / 7)));
+  useEffect(() => {
+    setDaysColored(calculateColoredDays(days, habit));
+  }, [habits]);
 
-  const startDate = dateRange[0];
-  const cellColor = "bg-gray-600";
+  const months: any[] = Array.from(new Array(Math.floor(timelineLength / 7)));
 
   return (
     <div>
@@ -25,21 +37,31 @@ const Timeline = ({ dateRange, habit }: TimelineProps) => {
         <div className="m-1 flex h-3 w-3 justify-center px-3 align-middle"></div>
         <div className="flex w-[100%] pr-2">
           {months.map((_, index) => (
-            <Month key={index} index={index} startDate={startDate} />
+            <Month key={index} index={index} startDate={dateRange[0]} />
           ))}
         </div>
       </div>
       <div className="flex items-start border border-red-600">
         <Weekdays />
-        <Days
-          days={days}
-          startDay={startDate}
-          cellColor={cellColor}
-          habit={habit}
-        />
+        <Days daysColored={daysColored} />
       </div>
     </div>
   );
 };
+
+function calculateColoredDays(days: string[], habit: habit) {
+  return days.map((day) => {
+    if (habit.days.some((d) => d.date === day))
+      return {
+        date: day,
+        color: habit.color || "bg-green-500",
+      };
+
+    return {
+      date: day,
+      color: "bg-gray-600",
+    };
+  });
+}
 
 export default Timeline;

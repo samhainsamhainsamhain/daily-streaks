@@ -1,45 +1,50 @@
-import { useState } from "react";
-import moment from "moment";
-import { habit } from "../../objects/objects";
-
 type DaysProps = {
-  days: number;
-  startDay: any;
-  cellColor: string;
-  habit: habit;
+  daysColored: {
+    date: string;
+    color: string;
+  }[];
 };
 
-const Days = ({ days, cellColor, habit, startDay }: DaysProps) => {
-  const cells = Array.from(new Array(days));
+const Days = ({ daysColored }: DaysProps) => {
+  const daysWithoutToday = [...daysColored.slice(0, -1)];
+  const today = [daysColored[daysColored.length - 1]];
 
   return (
     <div className="grid-rows-7 grid h-[calc(7*15px)] grid-flow-col flex-wrap content-center items-start justify-center">
-      {cells.map((_, index) => {
-        const date = moment(startDay)
-          .add(index + 1, "day")
-          .format("DDMMYY");
-
-        const coloredCell = habit.days.some((d) => {
-          return d.date === date && d.value === 1;
-        });
-
-        return <Cell key={index} coloredCell={coloredCell} />;
+      {daysWithoutToday.map((day, index) => {
+        return <Cell key={index} day={day} />;
+      })}
+      {today.map((day, index) => {
+        return <TodayCell key={index} day={day} />;
       })}
     </div>
   );
 };
 
 type CellProps = {
-  coloredCell: boolean;
+  day: {
+    date: string;
+    color: string;
+  };
 };
 
-const Cell = ({ coloredCell }: CellProps) => {
-  const [isColored, setIsColored] = useState(coloredCell);
-
-  let cellClass = `${
-    isColored ? "bg-green-500" : "bg-gray-600"
-  } m-1 flex h-2 w-2 cursor-pointer justify-center self-center align-middle text-xs `;
+const Cell = ({ day }: CellProps) => {
+  let cellClass = `${day.color} m-1 flex h-2 w-2 cursor-pointer justify-center self-center align-middle text-xs `;
 
   return <div className={cellClass}></div>;
 };
+// const MemoizedCell = React.memo(Cell); // TODO: NEED FIX, memo not working
+
+const TodayCell = ({ day }: CellProps) => {
+  let cellClass = `${day.color} m-1 mt-3 flex h-4 w-4 cursor-pointer justify-center self-center align-middle text-xs `;
+
+  const todayCellIsChecked =
+    day.date === new Date().toISOString().slice(0, 10) &&
+    day.color === "bg-gray-600";
+
+  console.log(todayCellIsChecked);
+
+  return <div className={cellClass}>{todayCellIsChecked ? "?" : ""}</div>;
+};
+
 export default Days;
