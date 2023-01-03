@@ -1,32 +1,35 @@
-import moment from "moment";
 import { habit } from "../../objects/objects";
 
 type HabitProps = {
-  name: string;
+  dateRange: Date[];
   habit: habit;
-  saveAppState: () => void;
+  updateHabits: (habitName: string) => void;
+  deleteHabit: (habitName: string) => void;
 };
 
-const Habit = ({ name, habit, saveAppState }: HabitProps) => {
+const Habit = ({ habit, updateHabits, deleteHabit, dateRange }: HabitProps) => {
   function checkHabit() {
-    if (habit.days[364].date === moment().format("DDMMYY")) return;
+    if (
+      habit.days.length &&
+      habit.days[habit.days.length - 1].date ===
+        dateRange[1].toISOString().slice(0, 10)
+    ) {
+      return;
+    }
 
-    habit.days.shift();
-    habit.days.push({
-      date: moment().format("DDMMYY"),
-      value: 1,
-    });
-
-    saveAppState();
+    updateHabits(habit.name);
   }
 
-  function deleteHabit() {
-    confirm("Are you sure you want to delete this habit?"); // TODO: delete habits
+  function deleteHabitHandler() {
+    if (confirm("Are you sure you want to delete this habit?"))
+      deleteHabit(habit.name);
+
+    return;
   }
 
   return (
     <div className="flex justify-between">
-      <div className="text-2xl">{name}</div>
+      <div className="text-2xl">{habit.name}</div>
       <div className="">
         <button
           className="m-1 rounded-2xl bg-green-600 p-1 text-xs"
@@ -36,7 +39,7 @@ const Habit = ({ name, habit, saveAppState }: HabitProps) => {
         </button>
         <button
           className="m-1 rounded-2xl bg-red-600 p-1 text-xs"
-          onClick={deleteHabit}
+          onClick={deleteHabitHandler}
         >
           Delete
         </button>

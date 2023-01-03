@@ -1,67 +1,92 @@
 import { useState, useEffect } from "react";
-import moment from "moment";
+
 import HabitForm from "./components/Habit/HabitForm";
 import HabitsList from "./components/Habit/HabitsList";
-import { day, habit } from "./objects/objects";
+
+import { getDateRange, getDatesInRange } from "./utils/dates";
+
+import { habit } from "./objects/objects";
+
 import "./App.css";
 
 function App() {
-  const [appState, setAppState] = useState<habit[]>([]);
-  const [timelineLength, setTimelineLength] = useState(365);
+  const [days, setDays] = useState<string[]>([]);
+  const [habits, setHabits] = useState<habit[]>([]);
+  const [timelineLength, setTimelineLength] = useState<number>(365);
+
+  const dateRange = getDateRange(timelineLength);
 
   useEffect(() => {
-    setAppState(JSON.parse(localStorage.getItem("habits") || "[]"));
+    setHabits(JSON.parse(localStorage.getItem("habits") || "[]"));
+    setDays(getDatesInRange(dateRange));
   }, []);
 
-  function createNewHabitHandler(habit: string) {
-    const newState = [...appState];
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
 
-    if (habitExists(habit)) {
+  return (
+    <div className="App w-[100%]">
+      <HabitForm createNewHabit={createNewHabit} />
+      <HabitsList
+        habits={habits}
+        dateRange={dateRange}
+        updateHabits={updateHabits}
+        deleteHabit={deleteHabit}
+        timelineLength={timelineLength}
+        days={days}
+      />
+    </div>
+  );
+
+  // State handling
+
+  function createNewHabit(habitName: string) {
+    const newHabits = [...habits];
+
+    if (habitExists(habitName)) {
       console.log("habit already exists"); //TODO: throw error to user
       return;
     }
 
-    newState.push({
-      name: habit,
-      days: [
-        ...Array.from(new Array(365)).map((_, index) => {
-          return {
-            date: moment(startDate).add(index, "day").format("DDMMYY"),
-            value: undefined,
-          };
-        }),
-      ],
+    newHabits.push({
+      name: habitName,
+      days: [],
     });
 
-    setAppState(newState);
-    localStorage.setItem("habits", JSON.stringify(newState));
+    setHabits(newHabits);
   }
 
-  function habitExists(habit: string) {
-    if (appState.find((e) => e.name === habit)) {
+  function habitExists(habit: string): boolean {
+    if (habits.find((e) => e.name === habit)) {
       return true;
     }
 
     return false;
   }
 
-  function saveAppState() {
-    localStorage.setItem("habits", JSON.stringify(appState));
+  function updateHabits(habitName: string) {
+    let updatedHabits = [...habits];
+    const date = new Date().toISOString().slice(0, 10);
+
+    updatedHabits.map((habit) => {
+      if (
+        habit.name === habitName &&
+        (!habit.days.length || habit.days[habit.days.length - 1].date !== date)
+      ) {
+        habit.days.push({ date, value: 1 });
+      }
+    });
+
+    setHabits(updatedHabits);
   }
 
-  const startDate = moment().add(-timelineLength, "days").toDate();
-  const dateRange = [startDate, moment().add(1, "days").toDate()];
-
-  return (
-    <div className="App w-[100%]">
-      <HabitForm createNewHabitHandler={createNewHabitHandler} />
-      <HabitsList
-        appState={appState}
-        dateRange={dateRange}
-        saveAppState={saveAppState}
-      />
-    </div>
-  );
+  function deleteHabit(habitName: string) {
+    const updatedHabits = [...habits].filter(
+      (habit) => habit.name !== habitName
+    );
+    setHabits(updatedHabits);
+  }
 }
 
 export default App;

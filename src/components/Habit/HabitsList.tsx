@@ -1,25 +1,43 @@
-import { habit } from "../../objects/objects";
-import Timeline from "../Timeline/Timeline";
 import Habit from "./Habit";
+import Timeline from "../Timeline/Timeline";
+
+import { habit } from "../../objects/objects";
 
 type HabitsListProps = {
-  appState: habit[];
+  days: string[];
+  habits: habit[];
   dateRange: Date[];
-  saveAppState: () => void;
+  timelineLength: number;
+  updateHabits: (habitName: string) => void;
+  deleteHabit: (habitName: string) => void;
 };
 
-const HabitsList = ({ appState, dateRange, saveAppState }: HabitsListProps) => {
+const HabitsList = ({
+  days,
+  habits,
+  dateRange,
+  timelineLength,
+  updateHabits,
+  deleteHabit,
+}: HabitsListProps) => {
   return (
     <ul className="my-0 mx-auto">
-      {appState.map((habit) => {
+      {habits.map((habit) => {
         return (
           <li className="pb-6" key={habit.name}>
             <Habit
-              name={habit.name}
+              dateRange={dateRange}
+              deleteHabit={deleteHabit}
               habit={habit}
-              saveAppState={saveAppState}
+              updateHabits={updateHabits}
             />
-            <Timeline dateRange={dateRange} habit={habit} />
+            <Timeline
+              dateRange={dateRange}
+              habits={habits}
+              habit={habit}
+              timelineLength={timelineLength}
+              days={days}
+            />
           </li>
         );
       })}

@@ -1,15 +1,16 @@
 import React, { ChangeEvent, useState } from "react";
 
 type HabitFormProps = {
-  createNewHabitHandler: (habit: string) => void;
+  createNewHabit: (habit: string) => void;
 };
 
-const HabitForm = ({ createNewHabitHandler }: HabitFormProps) => {
+const HabitForm = ({ createNewHabit }: HabitFormProps) => {
   const [newHabit, setNewHabit] = useState("");
 
   function submitFormHandler(event: React.FormEvent) {
     event.preventDefault();
-    createNewHabitHandler(newHabit);
+    createNewHabit(newHabit);
+    setNewHabit("");
   }
 
   function onChangeHandler(event: ChangeEvent<HTMLInputElement>) {
@@ -22,6 +23,7 @@ const HabitForm = ({ createNewHabitHandler }: HabitFormProps) => {
         className="rounded-2xl p-3 text-gray-400 outline-none"
         id="newHabit"
         placeholder="New Habit..."
+        value={newHabit}
         onChange={onChangeHandler}
       />
       <button
